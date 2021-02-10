@@ -12,6 +12,9 @@ namespace Persistence
         }
         public DbSet<Value> Values { get; set; }
 
+        public DbSet<Activity> Activities { get; set; }
+
+
         //inserting data into values table == Value intity
         protected override void OnModelCreating(ModelBuilder builder)
         {

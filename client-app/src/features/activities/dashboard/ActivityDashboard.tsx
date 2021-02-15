@@ -1,61 +1,23 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Grid, GridColumn } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+
+import { useStore } from "../../../app/stores/store";
 import ActivityDeatils from "../details/ActivityDeatils";
 import ActivityForm from "../form/ActivityForm";
 import ActivityList from "./ActivityList";
-
-interface Props {
-  activities: Activity[];
-  selectedActivity: Activity | undefined;
-  selectActivity: (id: string) => void;
-  cancelSelectActivity: () => void;
-  editMode: boolean;
-  openForm: (id: string) => void;
-  closeForm: () => void;
-  createOrEdit: (activity: Activity) => void;
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}
-export default function ActivityDashboard({
-  activities,
-  selectedActivity,
-  selectActivity,
-  cancelSelectActivity,
-  editMode,
-  openForm,
-  closeForm,
-  createOrEdit,
-  deleteActivity,
-  submitting,
-}: Props) {
+export default observer(function ActivityDashboard() {
+  const { activityStore } = useStore();
+  const { selectedActivity, editMode } = activityStore;
   return (
     <Grid>
       <GridColumn width="10">
-        <ActivityList
-          submitting={submitting}
-          activities={activities}
-          selectActivity={selectActivity}
-          deleteActivity={deleteActivity}
-        />
+        <ActivityList />
       </GridColumn>
       <GridColumn width="6">
-        {selectedActivity && !editMode && (
-          <ActivityDeatils
-            activity={selectedActivity}
-            cancelSelectActivity={cancelSelectActivity}
-            openForm={openForm}
-          />
-        )}
-        {editMode && (
-          <ActivityForm
-            closeForm={closeForm}
-            activity={selectedActivity}
-            createOrEdit={createOrEdit}
-            submitting={submitting}
-          />
-        )}
+        {selectedActivity && !editMode && <ActivityDeatils />}
+        {editMode && <ActivityForm />}
       </GridColumn>
     </Grid>
   );
-}
+});

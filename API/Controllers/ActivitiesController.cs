@@ -10,7 +10,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActivitiesController : ControllerBase
+    public class ActivitiesController : BaseApiController
     {
         private readonly IMediator _mediator;
         public ActivitiesController(IMediator mediator)
@@ -19,22 +19,24 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> List()
+        public async Task<IActionResult> List()
         {
-            return await _mediator.Send(new List.Query());
+            return HandleResult(await _mediator.Send(new List.Query()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Activity>> Details(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            return await _mediator.Send(new Details.Query { Id = id });
+            var result = await _mediator.Send(new Details.Query { Id = id });
+            return HandleResult(result);
+
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
             // activity is extracted automatically from request body
-            return Ok(await _mediator.Send(new Create.Command { Activity = activity }));
+            return HandleResult(await _mediator.Send(new Create.Command { Activity = activity }));
         }
 
         [HttpPut("{id}")]
@@ -42,13 +44,13 @@ namespace API.Controllers
         {
             //the id maybe not sent in the updated activity body
             activity.Id = id;
-            return Ok(await _mediator.Send(new Edit.Command { Activity = activity }));
+            return HandleResult(await _mediator.Send(new Edit.Command { Activity = activity }));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
-            return Ok(await _mediator.Send(new Delete.Command { Id = id }));
+            return HandleResult(await _mediator.Send(new Delete.Command { Id = id }));
         }
 
     }

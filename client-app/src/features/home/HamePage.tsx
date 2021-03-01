@@ -1,8 +1,14 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Header, Image, Segment } from "semantic-ui-react";
+import { useStore } from "../../app/stores/store";
+import LoginForm from "../users/LoginForm";
+import RegisterForm from "../users/RegisterForm";
 
-export default function HamePage() {
+export default observer(function HamePage() {
+  const { userStore, modalStore } = useStore();
+
   return (
     <Segment inverted textAlign="center" vertical className="masthead">
       <Container text>
@@ -15,11 +21,32 @@ export default function HamePage() {
           />
           Reactivities
         </Header>
-        <Header inverted as="h2" content="Welcome to Activities" />
-        <Button as={Link} to="/activities" size="huge" inverted>
-          Take me to the Activities!
-        </Button>
+        {userStore.isLoggedIn ? (
+          <>
+            <Header inverted as="h2" content="Welcome to Activities" />
+            <Button as={Link} to="/activities" size="huge" inverted>
+              Go to activities!
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={() => modalStore.openModal(<LoginForm />)}
+              size="huge"
+              inverted
+            >
+              Login!
+            </Button>
+            <Button
+              onClick={() => modalStore.openModal(<RegisterForm />)}
+              size="huge"
+              inverted
+            >
+              Register!
+            </Button>
+          </>
+        )}
       </Container>
     </Segment>
   );
-}
+});

@@ -12,14 +12,14 @@ export default observer(function ActivityDashboard() {
     if (activityRegistry.size <= 1) loadActivities();
   }, [loadActivities, activityRegistry]);
   if (activityStore.loadingInitial)
-    return <LoadingComponent content="Loading" />;
+    return <LoadingComponent content="Loading activities..." />;
   return (
     <Grid>
       <GridColumn width="10">
         <ActivityList />
       </GridColumn>
-      <GridColumn width="6"> 
-          <ActivityFilters />
+      <GridColumn width="6">
+        <ActivityFilters />
       </GridColumn>
     </Grid>
   );

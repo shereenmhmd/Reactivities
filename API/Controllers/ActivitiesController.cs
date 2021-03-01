@@ -9,6 +9,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
